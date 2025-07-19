@@ -6,11 +6,15 @@ import {
     Scripts,
     ScrollRestoration,
 } from "react-router";
+import { Toaster } from "sonner";
 
 import type { Route } from "./+types/root";
 import "./app.css";
 import { Header } from "./components/shared/Header";
 import { Footer } from "./components/shared/Footer";
+import { PageTransition } from "./components/shared/PageTransition";
+import { LoadingProvider } from "./components/shared/LoadingProvider";
+import { ThemeProvider } from "./components/shared/ThemeProvider";
 
 export const links: Route.LinksFunction = () => [
     { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -38,13 +42,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Links />
             </head>
             <body className="flex h-full flex-col bg-background text-foreground">
-                <Header />
-                <main className="flex-1">
-                    <div className="container mx-auto px-4 py-8">
-                        {children}
-                    </div>
-                </main>
-                <Footer />
+                <ThemeProvider defaultTheme="system" storageKey="app-theme">
+                    <LoadingProvider>
+                        <Header />
+                        <main className="flex-1 bg-background text-foreground">
+                            <div className="container mx-auto py-8 px-4 bg-background text-foreground">
+                                <PageTransition>{children}</PageTransition>
+                            </div>
+                        </main>
+                        <Footer />
+                        <Toaster position="bottom-right" expand={true} />
+                    </LoadingProvider>
+                </ThemeProvider>
                 <ScrollRestoration />
                 <Scripts />
             </body>
