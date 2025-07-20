@@ -7,3 +7,5 @@
 
 # Supabase
 .env
+
+.vercel
